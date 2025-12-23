@@ -1,26 +1,44 @@
-# 311-Project
+# 311 Project – Kurulum ve Çalıştırma Rehberi
 
-VS code extension kısmından:
--Database client jdbc
--mysql
--live server
--php
--php intelephense
--html
-bunlar indirilecek.
+Bu doküman, projeyi kendi bilgisayarında **ilk kez çalıştıracak kişiler** için hazırlanmıştır.  
+Aşağıdaki adımları **sırasıyla ve eksiksiz** uygulamanız yeterlidir.
 
-Daha sonrasında internetten MySQL i indirip pc ye kurucaksın.
+---
 
-MySQL'i kurduktan sonra VS Code a girip solda çıkan Database ikonuna basıp:
-Servertype: MySQL
-Host & Port'a dokunma
-Username: root
-password e config.php de en üstte yazan **$pass: ***** de yazan şifreyi girceksiniz.**
+## ⚙️ Gerekli VS Code Eklentileri
 
-Daha sonra internete girip XAMPP yi indirip, kurucaksın.
-XAMPP yi kurduğun C: sürücüsüne gidip ordan **xampp** dosyasına girip o dosya içinden de **htdocs**'a giriceksin.
-Klonladığın **proje dosyasını bütünüyle htdocs'a** atacaksın.
+VS Code üzerinden aşağıdaki eklentiler kurulmalıdır:
 
-Daha sonrasında projeyi başlatırken ilk önce XAMPP Conrol paneli açıp daha sonrasında **Apache'yi start'a basarak başlatıcaksın**.
-Apache yazısı yeşil olduktan sonra klonladığın proje dosyası içinde **theme/notlar.txt** diye bir not dosyası var. 
-O dosya içinde projeyi başlatmak içi gerekli komutlar yer almakta. (notlarda sadece apache & xampp li yerlere bakmak yeterli.)
+- Database Client JDBC  
+- MySQL  
+- Live Server  
+- PHP  
+- PHP Intelephense  
+- HTML  
+
+---
+
+## 🗄️ MySQL Kurulumu ve Bağlantı
+
+1. İnternetten **MySQL** indirip bilgisayarınıza kurun.
+2. Kurulum tamamlandıktan sonra **VS Code**’u açın.
+3. Sol menüde bulunan **Database** ikonuna tıklayın.
+4. Yeni bir bağlantı oluştururken aşağıdaki ayarları girin:
+
+   - **Server Type:** MySQL  
+   - **Host & Port:** Değiştirmeyin  
+   - **Username:** `root`  
+   - **Password:**  
+     Proje klasöründe bulunan `config.php` dosyasının en üstünde yer alan:
+     ```php
+     $pass = "*****";
+     ```
+
+---
+
+## 🧰 XAMPP Kurulumu
+
+1. İnternetten **XAMPP** indirip bilgisayarınıza kurun.
+2. XAMPP’yi kurduğunuz **C:** sürücüsüne gidin.
+3. Aşağıdaki dizine ilerleyin:
+
