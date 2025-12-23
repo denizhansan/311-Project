@@ -29,6 +29,7 @@ VS Code üzerinden aşağıdaki eklentiler kurulmalıdır:
    - **Host & Port:** Değiştirmeyin  
    - **Username:** `root`  
    - **Password:** MySQL installeri indirdikten sonra sizden oluşturmanızı istediği password'ü gireceksiniz.
+   - Not: 'config.php' dosyasındaki password'ü kendi passwordünüzle değiştirin!!! 
 
 
 ---
