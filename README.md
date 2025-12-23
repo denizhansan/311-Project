@@ -39,7 +39,7 @@ VS Code üzerinden aşağıdaki eklentiler kurulmalıdır:
 ## 🧰 XAMPP Kurulumu
 
 1. İnternetten **XAMPP** indirip bilgisayarınıza kurun.
-2. XAMPP kurulumundan sonra bilgisayarınızdaki **htdocs** klasörüne girin.
+2. XAMPP kurulumundan sonra C: diskinde **xampp** -> **htdocs** klasörüne girin.
 3. GitHub’dan **klonladığınız proje klasörünü**,  
    **tamamıyla bu htdocs klasörünün içine kopyalayın.**
 
