@@ -1,6 +1,6 @@
 # 311-Project
 
-VS code extension kısmından:\n 
+VS code extension kısmından:
 -Database client jdbc
 -mysql
 -live server
