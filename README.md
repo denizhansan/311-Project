@@ -39,6 +39,21 @@ VS Code üzerinden aşağıdaki eklentiler kurulmalıdır:
 ## 🧰 XAMPP Kurulumu
 
 1. İnternetten **XAMPP** indirip bilgisayarınıza kurun.
-2. XAMPP’yi kurduğunuz **C:** sürücüsüne gidin.
-3. Aşağıdaki dizine ilerleyin:
+2. XAMPP kurulumundan sonra bilgisayarınızdaki **htdocs** klasörüne girin.
+3. GitHub’dan **klonladığınız proje klasörünü**,  
+   **tamamıyla bu htdocs klasörünün içine kopyalayın.**
 
+---
+
+## ▶️ Projeyi Çalıştırma
+
+1. **XAMPP Control Panel**’i açın.
+2. **Apache** için **Start** butonuna basarak servisi başlatın.
+3. Apache durumu **yeşil** olduktan sonra:
+   - Proje klasörü içinde bulunan:
+     ```
+     theme/notlar.txt
+     ```
+     dosyasını açın.
+4. Bu dosya içerisinde projeyi başlatmak için gerekli komutlar yer almaktadır.
+   - **Not:** Sadece *Apache & XAMPP* ile ilgili olan kısımlara bakmanız yeterlidir.
