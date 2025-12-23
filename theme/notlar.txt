@@ -1,0 +1,19 @@
++serveri başlatmaya yarıyor.
+php -S localhost:8000
+
++serveri kapatmaya yarıyor.
+terminalde ctrl+c 
+
++mysql db 
+database isim: defacto_db 
+username: root
+password: 3256Asd!?
+
++Projede mysql ve php yi çalıştırmak için xampp kontrol panelinde apache yi çalıştırıp daha sonra
+http://localhost/ise311-project/shoping.php
+bu linki gir.
+-xampp php mysql apache nin beraber çalışmasını sağlayan bir program.
+-Bu program sayesinde uygulamalar birbirleriyle konuşup sorunsuz bir şekilde çalışıyor ve bir test ortamı sağlanıyor.
+-Sadece vscode üstünden run etmeye çalışınca database i çağıramıyoruz.
+-Ancak bu uygulama ve apache sayesinde mysql i php ile konuşturup çalıştırabiliyoruz.
+-Apache de lokalde mysql + php yi çalıştıran bir test ortamı sağlıyor.

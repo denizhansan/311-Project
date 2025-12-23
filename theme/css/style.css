@@ -1,0 +1,41 @@
+.jumbotron
+{
+    background-size: contain;
+    height: auto;
+    opacity: 0.6;
+}
+
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+}
+
+.rounded-custom
+{
+    border-radius: 12px;
+}
+
+#write-review
+{
+    margin-left: 50px;
+}
+
+#product-price
+{
+    font-size: 30px;
+}
+
+.card-img-top {
+    width: 100%;
+    height: 350px;   /* istediğin yükseklik */
+    object-fit: cover;
+}
+
+main {
+    flex: 1; /* Boşluğu ana içerik kaplasın */
+}
