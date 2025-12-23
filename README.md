@@ -67,8 +67,6 @@ VS Code üzerinden aşağıdaki eklentiler kurulmalıdır:
     PRIMARY KEY (product_id));
 5. Bu işlemden sonra product tablosu oluşturulacaktır.
 
----
-
 ### 3️⃣ Product Tablosuna Veri Ekleme
 
 1. product tablosunun üzerine gelin.
