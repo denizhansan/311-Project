@@ -9,7 +9,4 @@ $conn = new mysqli($host, $user, $pass, $db);
 if ($conn->connect_error) {
     die("0/Bağlantı hatası: " . $conn->connect_error); 
 }
-else {
-    echo"1/Balantı başarılı";
-}
 ?>
