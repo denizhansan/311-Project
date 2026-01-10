@@ -76,7 +76,7 @@ if (isset($_POST['size_id'])) {
       <div class="text-end">
         <button class="btn">Giriş</button>
         <button class="btn">Favorilerim</button>
-        <a href="summary.php" class="btn">Sepetim (0)</a>
+        <a href="summary.php" class="btn">Sepetim</a>
       </div>
     </div>
   </div>

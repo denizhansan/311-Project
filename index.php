@@ -72,28 +72,31 @@
 </head>
 
 <body>
+    <div class="header-overlay">
+        <div class="container-fluid d-flex align-items-center justify-content-between py-3">
 
-    <!-- HEADER -->
-    <div class="d-flex flex-wrap align-items-center justify-content-between" style="margin:30px 50px 50px 40px;">
+            <a href="index.php" class="d-flex align-items-center text-decoration-none">
+                <i class="fa fa-bars me-3" style="font-size: 30px; color: black"></i>
+                <img style="width: 150px; height: 30px;" src="theme/images/defacto.png">
+            </a>
 
-        <i class="fa fa-bars" style="font-size:30px;color:black"></i>
+            <div class="d-flex align-items-center flex-wrap">
 
-        <a href="index.php">
-            <img src="theme/images/logo.jpg" alt="Logo" style="height:40px; margin-left: 15px;">
-        </a>
+                <form class="me-3">
+                    <input type="search" class="form-control" placeholder="NE ARAMAK İSTERSİN?">
+                </form>
 
-        <div class="d-flex align-items-center ms-auto">
-            <form class="me-3">
-                <input type="search" class="form-control" placeholder="Ne aramak istersin?">
-            </form>
+                <div class="d-flex">
+                    <button class="btn">Giriş</button>
+                    <button class="btn">Favorilerim</button>
+                    <a href="summary.php" class="btn">
+                        Sepetim</a>
+                </div>
 
-            <div class="text-end">
-                <button class="btn">Giriş</button>
-                <button class="btn">Favorilerim</button>
-                <a href="summary.php" class="btn">Sepetim (0)</a>
             </div>
         </div>
     </div>
+
 
     <!-- BANNER 1 - En üstte tamamen sıfır boşluk ile -->
     <section class="hero-banner-top">
@@ -113,20 +116,32 @@
     </div>
 
     <!-- ÜST KATEGORİLER -->
-    <section class="categories">
-        <div class="category-card">
+     <div class="categories text-center mt-5">
+    <div class="category-card">
+        <a href="shoping.php?sub_category%5B%5D=4">
             <img src="theme/images/mont-kaban.jpg" alt="Mont | Kaban">
-        </div>
-        <div class="category-card">
-            <img src="theme/images/triko.jpg" alt="Triko">
-        </div>
-        <div class="category-card">
+        </a>
+    </div>
+
+    <div class="category-card">
+        <a href="shoping.php?sub_category%5B%5D=1">
+            <img src="theme/images/pantolon.png" alt="Pantolon">
+        </a>
+    </div>
+
+    <div class="category-card">
+        <a href="shoping.php?sub_category%5B%5D=2">
             <img src="theme/images/sweatshirt.jpg" alt="Sweatshirt & Eşofman">
-        </div>
-        <div class="category-card">
-            <img src="theme/images/gomlek.jpg" alt="Gömlek">
-        </div>
-    </section>
+        </a>
+    </div>
+
+    <div class="category-card">
+        <!-- TÜM KIYAFETLER -->
+        <a href="shoping.php">
+            <img src="theme/images/tumkiyafet.png" alt="Tüm Kıyafetler">
+        </a>
+    </div>
+</div>
 
     <!-- FIT TECH -->
     <section class="fit-tech-section text-center mt-5">
@@ -161,4 +176,5 @@
     </footer>
 
 </body>
+
 </html>

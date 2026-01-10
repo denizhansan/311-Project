@@ -1,11 +1,7 @@
 <?php
 include "config.php";
 
-/*
-|--------------------------------------------------------------------------
-| BASE QUERY
-|--------------------------------------------------------------------------
-*/
+// BASE QUERY
 $sql = "
 SELECT DISTINCT 
     p.product_id,
@@ -19,33 +15,21 @@ LEFT JOIN sub_category sc ON p.sub_category_id = sc.sub_category_id
 WHERE 1=1
 ";
 
-/*
-|--------------------------------------------------------------------------
-| BEDEN FİLTRESİ (Small / Medium / Large)
-|--------------------------------------------------------------------------
-*/
+// BEDEN FİLTRESİ (Small / Medium / Large)
 if (!empty($_GET['size'])) {
   $sizes = array_map('intval', $_GET['size']); // size_id
   $sizeList = implode(",", $sizes);
   $sql .= " AND ps.size_id IN ($sizeList)";
 }
 
-/*
-|--------------------------------------------------------------------------
-| ALT / ÜST BEDEN (sub_category_id)
-|--------------------------------------------------------------------------
-*/
+// ALT / ÜST BEDEN (sub_category_id)
 if (!empty($_GET['sub_category'])) {
   $subs = array_map('intval', $_GET['sub_category']);
   $subList = implode(",", $subs);
   $sql .= " AND p.sub_category_id IN ($subList)";
 }
 
-/*
-|--------------------------------------------------------------------------
-| SORGUYU ÇALIŞTIR
-|--------------------------------------------------------------------------
-*/
+// SORGUYU ÇALIŞTIR
 $result = $conn->query($sql);
 ?>
 
@@ -81,7 +65,7 @@ $result = $conn->query($sql);
       <div class="text-end">
         <button class="btn">Giriş</button>
         <button class="btn">Favorilerim</button>
-        <a href="summary.php" class="btn">Sepetim (0)</a>
+        <a href="summary.php" class="btn">Sepetim</a>
       </div>
     </div>
   </div>
