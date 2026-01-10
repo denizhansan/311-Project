@@ -1,277 +1,245 @@
-<!DOCTYPE html>
+<?php
+require_once "config.php";
+
+$id = isset($_GET['id']) ? (int) $_GET['id'] : 0;
+if ($id <= 0) {
+  die("Geçersiz ürün");
+}
+
+/* ÜRÜN */
+$sql = "SELECT * FROM product WHERE product_id = $id";
+$result = $conn->query($sql);
+if ($result->num_rows == 0) {
+  die("Ürün bulunamadı");
+}
+$product = $result->fetch_assoc();
+
+/* BEDENLER */
+$sizeSql = "
+    SELECT s.size_id, s.size_name, ps.stock_quantity
+    FROM product_size ps
+    JOIN size s ON ps.size_id = s.size_id
+    WHERE ps.product_id = $id
+";
+$sizes = $conn->query($sizeSql);
+
+/* TOPLAM STOK */
+$totalStock = $conn->query("
+    SELECT SUM(stock_quantity) AS total_stock
+    FROM product_size
+    WHERE product_id = $id
+")->fetch_assoc();
+
+/* SEÇİLEN BEDEN STOĞU */
+$selectedStock = null;
+if (isset($_POST['size_id'])) {
+  $selectedSizeId = (int) $_POST['size_id'];
+  $stockRes = $conn->query("
+        SELECT s.size_name, ps.stock_quantity
+        FROM product_size ps
+        JOIN size s ON ps.size_id = s.size_id
+        WHERE ps.product_id = $id
+        AND ps.size_id = $selectedSizeId
+    ");
+  $selectedStock = $stockRes->fetch_assoc();
+}
+?>
+<!doctype html>
 <html lang="tr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Relax Ceket Yaka Düğmeli Kaşe Parka</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
-	
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-	<link rel="stylesheet" href="css/style.css">
-    <style>
-        body{
-            margin:0;
-            font-family: Arial, sans-serif;
-            background: #ffffff;
-            color: #111;
-        }
-        /* İçerik */
-        .product-image img{
-            width:100%;
-            
-        }
-        /* Ürün Bilgileri */
-        .product-info h1{
-            font-size:26px;
-            font-weight:bold;
-        }
-        .price{
-            margin-top:10px;
-            font-size:24px;
-            font-weight:bold;
-        }
-        /* RENKLER */
-        .color-wrap{
-            display:flex;
-            gap:10px;
-            margin-top:15px;
-        }
-        .color-radio{
-            display:none;
-        }
-        .color-label{
-            width:22px;
-            height:22px;
-            border:1px solid #ccc;
-            border-radius:4px;
-            cursor:pointer;
-            display:inline-block;
-            transition:0.2s;
-        }
-        /* Seçili renk */
-        .color-radio:checked + .color-label{
-            border:2px solid black;
-            transform:scale(1.1);
-        }
-        /* BEDENLER */
-        .size-wrap{
-            display:flex;
-            gap:10px;
-            margin-top:15px;
-        }
-        .size-radio{
-            display:none;
-        }
-        .size-label{
-            padding:6px 10px;
-            border:1px solid #ccc;
-            border-radius:4px;
-            cursor:pointer;
-            transition:0.2s;
-            font-size:14px;
-            display:inline-block;
-        }
-        /* Seçili beden */
-        .size-radio:checked + .size-label{
-            border:2px solid black;
-            background:#eee;
-            transform:scale(1.05);
-        }
-        .btnn{
-            width:100%;
-            background:black;
-            color:white;
-            padding:14px 0;
-            border:none;
-            border-radius:4px;
-            font-size:17px;
-            cursor:pointer;
-            margin-top:20px;
-        }
-        .desc{
-            margin-top:20px;
-            color:#555;
-            line-height:1.5;
-        }
-        @media (max-width:900px){
-            .container{
-                grid-template-columns:1fr;
-            }
-        } 
-        .top-btn {
-        background: white !important;
-        color: black !important;
-        border: 1px solid black !important;
-        padding: 8px 18px;
-        border-radius: 6px;
-        }
-        /* Üzerine gelince de aynı kalsın */
-        .top-btn:hover {
-        background: white !important;
-        color: black !important;
-        border: 1px solid black !important;
-        }
-        .product-image {
-        aspect-ratio: 3 / 4;   /* dik foto için ideal */
-        overflow: hidden;
-        border-radius: 15px;
-        }
-        .product-image img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        }
+    <title>311-Proje/Products</title>
 
-</style>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="theme/css/style.css">
 </head>
+
 <body>
 
-<div style="margin-top: 30px; margin-bottom: 50px; margin-left: 40px; margin-right: 50px" 
-     class="d-flex flex-wrap align-items-center justify-content-between">
+  <!-- HEADER -->
+  <div class="d-flex flex-wrap align-items-center justify-content-between" style="margin:30px 50px 50px 40px;">
 
-	<a href="/" class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none">
-    	<i class="fa fa-bars" style="font-size: 30px; margin-right: 20px; color: black" aria-hidden="true"></i>
-    	<img style="width: 150px; height: 30px;" src="theme/images/logo.jpg">
-	</a>
+    <i class="fa fa-bars" style="font-size:30px;color:black"></i>
 
+    <a href="index.php">
+      <img src="theme/images/logo.jpg" alt="Logo" style="height:40px; margin-left: 15px;">
+    </a>
 
-    <!-- Arama + Sağ Kısım (ms-auto ile sağa yaslıyoruz) -->
     <div class="d-flex align-items-center ms-auto">
+      <form class="me-3">
+        <input type="search" class="form-control" placeholder="Ne aramak istersin?">
+      </form>
 
-        <!-- Arama Kutusu -->
-        <form class="me-3">
-            <input type="search" class="form-control form-control-dark"
-                   placeholder="Ne aramak istersin?" aria-label="Search">
+      <div class="text-end">
+        <button class="btn">Giriş</button>
+        <button class="btn">Favorilerim</button>
+        <a href="summary.php" class="btn">Sepetim</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- BREADCRUMB -->
+   <div style="margin-left: 30px; margin-top: -10px; margin-bottom: 10px; font-size: 18px;">
+      <nav aria-label="breadcrumb" class="px-4 mb-3">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item">
+            <a href="index.php">Anasayfa</a>
+          </li>
+          <li class="breadcrumb-item active" aria-current="page">
+            <a href="shoping.php">Erkek Giyim</a>
+          </li>
+          <li class="breadcrumb-item active" aria-current="page">
+            <?= htmlspecialchars($product['product_name']) ?>
+        </ol>
+      </nav>
+    </div>
+
+  <div class="container py-5">
+    <div class="row">
+
+      <!-- FOTO -->
+      <div class="col-md-6">
+        <img src="theme/images/<?= htmlspecialchars($product['product_image']) ?>" class="img-fluid">
+      </div>
+
+      <!-- BİLGİ -->
+      <div class="col-md-6">
+        <h1><?= htmlspecialchars($product['product_name']) ?></h1>
+
+        <div class="fs-4 fw-bold mb-2">
+          <?= number_format($product['price'], 2) ?> TL
+        </div>
+
+        <!-- BEDEN SEÇİM FORMU -->
+        <form method="post">
+          <strong>Beden:</strong><br>
+
+          <div class="btn-group mt-2">
+            <?php while ($size = $sizes->fetch_assoc()): ?>
+              <input type="radio" class="btn-check" name="size_id" id="size<?= $size['size_id'] ?>"
+                value="<?= $size['size_id'] ?>" onchange="this.form.submit()" <?= isset($_POST['size_id']) && $_POST['size_id'] == $size['size_id'] ? 'checked' : '' ?>>
+              <label class="btn btn-outline-dark" for="size<?= $size['size_id'] ?>">
+                <?= htmlspecialchars($size['size_name']) ?>
+              </label>
+            <?php endwhile; ?>
+          </div>
         </form>
 
-        <!-- Butonlar -->
-        <div class="text-end">
-            <button type="button" class="btn">Giriş</button>
-            <button type="button" class="btn">Favorilerim</button>
-            <button type="button" class="btn">Sepetim (0)</button>
+        <!-- STOK BİLGİSİ -->
+        <div class="mt-3 text-muted">
+          <?php if ($selectedStock): ?>
+            Seçilen beden (<?= htmlspecialchars($selectedStock['size_name']) ?>) stoğu:
+            <strong><?= $selectedStock['stock_quantity'] ?> adet</strong>
+          <?php else: ?>
+            Lütfen beden seçiniz
+          <?php endif; ?>
         </div>
-    </div>
-</div>
-<!-- İçerik -->
-<div class="container py-5 mt-5">
-    
-    <div class="row">
-        <!-- Ürün Foto -->
-        <div class="product-image col-md-6">
-            <img src="photos/Kaban1.jpg" alt="Ürün Resmi" class="img-fluid">
-        </div>
-        <!-- Ürün Bilgileri -->
-        <div class="product-info col-md-6">
-            
-            <br><br>
-            <h1>Relax Fit Ceket Yaka Düğmeli Kaşe Parka</h1><br>
-            <div class="price">2499.99 TL</div><br>
-            <!-- RENK SEÇİMİ -->
-            <strong>Renk Seç:</strong>
-            <br>
-            <div class="color-wrap">
-                
-                <input type="radio" name="color" id="c1" class="color-radio" checked>
-                <label for="c1" class="color-label" style="background:black;"></label>
 
-                <input type="radio" name="color" id="c2" class="color-radio">
-                <label for="c2" class="color-label" style="background:#ccbca8;"></label>
-                
-                <input type="radio" name="color" id="c5" class="color-radio">
-                <label for="c5" class="color-label" style="background:#800020;"></label>
+        <!-- SEPETE EKLE -->
+        <form action="summary.php" method="post" class="mt-3">
+          <input type="hidden" name="product_id" value="<?= $product['product_id'] ?>">
+          <input type="hidden" name="price" value="<?= $product['price'] ?>">
 
-            </div><br><br>
-            <!-- BEDEN SEÇİMİ -->
-            <strong>Beden Seç:</strong>
-            <div class="size-wrap">
+          <?php if ($selectedStock): ?>
+            <input type="hidden" name="size_id" value="<?= $_POST['size_id'] ?>">
+          <?php endif; ?>
 
-                <input type="radio" name="size" id="s1" class="size-radio">
-                <label for="s1" class="size-label">S</label>
+          <button class="btn btn-dark w-100" <?= !$selectedStock ? 'disabled' : '' ?>>
+            SEPETE EKLE
+          </button>
+        </form>
 
-                <input type="radio" name="size" id="s2" class="size-radio" checked>
-                <label for="s2" class="size-label">M</label>
-
-                <input type="radio" name="size" id="s3" class="size-radio">
-                <label for="s3" class="size-label">L</label>
-            </div><br><br>
-
-            <button class="btnn">SEPETE EKLE</button>
-
-            <div class="desc">
-                Relax Fit Ceket Yaka Düğmeli Cepli Kışlık Kaşe Parka.  
+        <div class="mt-3 text-secondary">
+          Toplam stok: <strong><?= $totalStock['total_stock'] ?? 0 ?> adet</strong>
+          <div class="desc">
+                <br>
+                Relax Fit Ceket Yaka Düğmeli Cepli Kışlık Kaşe Parka.
                 Kalın kaşe dokusu ve şık tasarımıyla soğuk havalarda stil sunar.<br><br>
-                Ürün Kodu: Y8903AZBK27
-            </div>
+                Ürün Kodu: AZ1327F<?= htmlspecialchars($product['product_id']) ?><br>
+          </div>
         </div>
+      </div>
     </div>
-</div>
+  </div>
 
-    <br><br><br>
-<footer class="container ; py-5; mt-5">
-  <div class="row">
-    <div class="col-6 col-md-2 mb-3">
-      <h5>Section</h5>
-      <ul class="nav flex-column">
-        <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Home</a></li>
-        <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Features</a></li>
-        <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Pricing</a></li>
-        <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">FAQs</a></li>
-        <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">About</a></li>
+  <footer class="container ; py-5; mt-5">
+    <div class="row">
+
+      <div class="col-6 col-md-2 mb-3">
+        <h5>Defacto</h5>
+        <ul class="nav flex-column">
+          <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">KURUMSAL</a></li>
+          <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">HAKKIMIZDA</a></li>
+          <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">İNSAN KAYNAKLARI</a></li>
+          <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">KURUMSAL SATIŞ</a></li>
+          <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">TOPTAN SATIŞ</a></li>
+          <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">DEFACTO TEKNOLOJİ</a></li>
+          <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">SİTEMAP</a></li>
+        </ul>
+      </div>
+
+      <div class="col-6 col-md-2 mb-3">
+        <h5>YARDIM</h5>
+        <ul class="nav flex-column">
+          <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Sıkça Sorulan Sorular</a></li>
+          <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Siparişimi Nasıl Takip
+              Ederim?</a></li>
+          <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Nasıl İade Ederim?</a></li>
+          <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Gift Club Sıkça Sorulan
+              Sorular</a></li>
+          <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">İşlem Rehberi</a></li>
+          <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Kampanyalar</a></li>
+          <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Kişisel Verilerin Korunması ve
+              Gizlilik</a></li>
+        </ul>
+      </div>
+
+      <div class="col-6 col-md-2 mb-3">
+        <h5>BİZE ULAŞIN</h5>
+        <ul class="nav flex-column">
+          <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Mağazalarımız</a></li>
+          <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">İletişim Formu</a></li>
+        </ul>
+      </div>
+
+      <div class="col-md-5 offset-md-1 mb-3">
+        <form>
+          <h5>BİZDEN HABERDAR OLUN</h5>
+          <p>Aylık bültenimizle yeniliklerden ve gelişmelerden haberdar olun.</p>
+          <div class="d-flex flex-column flex-sm-row w-100 gap-2">
+            <label for="newsletter1" class="visually-hidden">Email address</label>
+            <input id="newsletter1" type="email" class="form-control" placeholder="Email address">
+            <button class="btn" style="border: 1px solid lightgrey" type="button">Abone Ol</button>
+          </div>
+        </form>
+      </div>
+
+    </div>
+
+    <div class="d-flex flex-column flex-sm-row justify-content-between py-4 my-4 border-top">
+      <p>© 2025 defacto.com Her Hakkı Saklıdır.</p>
+      <ul class="list-unstyled d-flex">
+        <li class="ms-3">
+          <a class="link-body-emphasis" href="#" aria-label="Instagram">
+            <svg class="bi" width="24" height="24">
+              <use xlink:href="#instagram"></use>
+            </svg>
+          </a>
+        </li>
+        <li class="ms-3">
+          <a class="link-body-emphasis" href="#" aria-label="Facebook">
+            <svg class="bi" width="24" height="24" aria-hidden="true">
+              <use xlink:href="#facebook"></use>
+            </svg>
+          </a>
+        </li>
       </ul>
     </div>
-    <div class="col-6 col-md-2 mb-3">
-      <h5>Section</h5>
-      <ul class="nav flex-column">
-        <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Home</a></li>
-        <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Features</a></li>
-        <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Pricing</a></li>
-        <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">FAQs</a></li>
-        <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">About</a></li>
-      </ul>
-    </div>
-    <div class="col-6 col-md-2 mb-3">
-      <h5>Section</h5>
-      <ul class="nav flex-column">
-        <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Home</a></li>
-        <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Features</a></li>
-        <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Pricing</a></li>
-        <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">FAQs</a></li>
-        <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">About</a></li>
-      </ul>
-    </div>
-    <div class="col-md-5 offset-md-1 mb-3">
-      <form>
-        <h5>Subscribe to our newsletter</h5>
-        <p>Monthly digest of what's new and exciting from us.</p>
-        <div class="d-flex flex-column flex-sm-row w-100 gap-2">
-          <label for="newsletter1" class="visually-hidden">Email address</label>
-          <input id="newsletter1" type="email" class="form-control" placeholder="Email address">
-          <button class="btn btn-primary" type="button">Subscribe</button>
-        </div>
-      </form>
-    </div>
-  </div>
-  <div class="d-flex flex-column flex-sm-row justify-content-between py-4 my-4 border-top">
-    <p>© 2025 Company, Inc. All rights reserved.</p>
-    <ul class="list-unstyled d-flex">
-      <li class="ms-3">
-        <a class="link-body-emphasis" href="#" aria-label="Instagram">
-          <svg class="bi" width="24" height="24">
-            <use xlink:href="#instagram"></use>
-          </svg>
-        </a>
-      </li>
-      <li class="ms-3">
-        <a class="link-body-emphasis" href="#" aria-label="Facebook">
-          <svg class="bi" width="24" height="24" aria-hidden="true">
-            <use xlink:href="#facebook"></use>
-          </svg>
-        </a>
-      </li>
-    </ul>
-  </div>
-</footer>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/holder/2.9.9/holder.min.js"></script>
-    	<script src="js/holder.min.js" type="text/javascript"></script>
+  </footer>
+
 </body>
+
 </html>
