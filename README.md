@@ -1,4 +1,4 @@
-# 311 Project – Kurulum ve Çalıştırma Rehberi
+# 311 Project – Kurulum ve Çalıştırma Rehberi (İlk versiyon için)
 
 Bu doküman, projeyi kendi bilgisayarında **ilk kez çalıştıracak kişiler** için hazırlanmıştır.  
 Aşağıdaki adımları **sırasıyla ve eksiksiz** uygulamanız yeterlidir.
